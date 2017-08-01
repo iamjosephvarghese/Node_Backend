@@ -8,38 +8,38 @@ var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
- 
+
 // get our request parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
- 
+
 // log to console
 app.use(morgan('dev'));
- 
+
 // Use the passport package in our application
 app.use(passport.initialize());
- 
+
 // demo Route (GET http://localhost:8080)
 app.get('/', function(req, res) {
   res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
- 
+
 // Start the server
 app.listen(port);
 console.log('There will be dragons: http://localhost:' + port);
 
 // demo Route (GET http://localhost:8080)
 // ...
- 
+
 // connect to database
 mongoose.connect(config.database);
- 
+
 // pass passport for configuration
 require('./config/passport')(passport);
- 
+
 // bundle our routes
 var apiRoutes = express.Router();
- 
+
 // create a new user account (POST http://localhost:8080/api/signup)
 apiRoutes.post('/signup', function(req, res) {
   if (!req.body.name || !req.body.password) {
@@ -58,7 +58,7 @@ apiRoutes.post('/signup', function(req, res) {
     });
   }
 });
- 
+
 // connect the api routes under /api/*
 app.use('/api', apiRoutes);
 
@@ -68,7 +68,7 @@ apiRoutes.post('/authenticate', function(req, res) {
     name: req.body.name
   }, function(err, user) {
     if (err) throw err;
- 
+
     if (!user) {
       res.send({success: false, msg: 'Authentication failed. User not found.'});
     } else {
@@ -96,7 +96,7 @@ apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), fu
       name: decoded.name
     }, function(err, user) {
         if (err) throw err;
- 
+
         if (!user) {
           return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
         } else {
@@ -107,7 +107,7 @@ apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), fu
     return res.status(403).send({success: false, msg: 'No token provided.'});
   }
 });
- 
+
 getToken = function (headers) {
   if (headers && headers.authorization) {
     var parted = headers.authorization.split(' ');
