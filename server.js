@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
 });
 
 // Start the server
-app.listen(port);
+
 console.log('There will be dragons: http://localhost:' + port);
 
 // demo Route (GET http://localhost:8080)
@@ -64,6 +64,7 @@ app.use('/api', apiRoutes);
 
 
 apiRoutes.post('/authenticate', function(req, res) {
+  console.log(req.body.name, req.body.password);
   User.findOne({
     name: req.body.name
   }, function(err, user) {
@@ -120,3 +121,5 @@ getToken = function (headers) {
     return null;
   }
 };
+
+app.listen(port);
